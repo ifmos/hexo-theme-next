@@ -1,15 +1,12 @@
-/**
- * next-url.js | https://theme-next.org/api/helpers/next-url/
- */
-
 /* global hexo */
 
 'use strict';
 
+const { htmlTag } = require('hexo-util');
+const url = require('url');
+
 hexo.extend.helper.register('next_url', function(path, text, options) {
-  var htmlTag = require('hexo-util').htmlTag;
-  var config = this.config;
-  var url = require('url');
+  const { config } = this;
   var data = url.parse(path);
   var siteHost = url.parse(config.url).hostname || config.url;
 
@@ -22,7 +19,7 @@ hexo.extend.helper.register('next_url', function(path, text, options) {
   if (theme.exturl && data.protocol && data.hostname !== siteHost) {
     tag = 'span';
     exturl = 'exturl';
-    var encoded = new Buffer(path).toString('base64');
+    var encoded = Buffer.from(path).toString('base64');
     attrs = {
       class     : exturl,
       'data-url': encoded
@@ -31,12 +28,7 @@ hexo.extend.helper.register('next_url', function(path, text, options) {
 
   options = options || {};
 
-  var keys = Object.keys(options);
-  var key = '';
-
-  for (var i = 0, len = keys.length; i < len; i++) {
-    key = keys[i];
-
+  for (let key of Object.keys(options)) {
     /**
      * If option have `class` attribute, add it to
      * 'exturl' class if `exturl` option enabled.
@@ -66,5 +58,5 @@ hexo.extend.helper.register('next_url', function(path, text, options) {
     }
   }
 
-  return htmlTag(tag, attrs, text);
+  return htmlTag(tag, attrs, text, false);
 });
